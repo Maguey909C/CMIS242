@@ -15,16 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.*;
 import java.io.*;
+import java.awt.event.*;
 import java.awt.SystemColor;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
-import java.util.Arrays;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
+import java.util.stream.Collectors;
 
 public class CMIS242PRJ3RenickC {
 
@@ -36,11 +31,15 @@ public class CMIS242PRJ3RenickC {
 	private static JTextField textField_2;
 	private static JTextField instruction3;
 	
-	private static ArrayList<Integer> nTimes = new ArrayList<>();
-	private static ArrayList<Integer> results = new ArrayList<>();
-	private static ArrayList<Integer> efficiencies = new ArrayList<>();
-
-	public static void WriteFile (ArrayList<Integer> nTimes, ArrayList<Integer> results, ArrayList<Integer> efficiencies) {
+	private static ArrayList<String> nTimes = new ArrayList<>();
+	private static ArrayList<String> results = new ArrayList<>();
+	private static ArrayList<String> efficiencies = new ArrayList<>();
+	
+	
+	//Function: Writes array lists to various lines in a csv file following the close of the GUI
+    //Input: Array list of the input value from the user in the GUI, the results from the calculation, and efficiency number
+    //Output: A csv file entitled results.csv that contains all the input data, result data, and efficiency data
+	public static void WriteFile (ArrayList<String> nTimes, ArrayList<String> results, ArrayList<String> efficiencies) {
 		String fileName = "results.csv";
 		try {
 			 // Assume default encoding.
@@ -51,11 +50,20 @@ public class CMIS242PRJ3RenickC {
 		
 		     // Note that write() does not automatically
 		     // append a newline character.
-		     bufferedWriter.write("Hello there,");
-		     bufferedWriter.write(" here is some text.");
+		     
+		     String line1 = nTimes.stream().collect(Collectors.joining(","));
+		     String line3 = results.stream().collect(Collectors.joining(","));
+		     String line5 = efficiencies.stream().collect(Collectors.joining(","));
+		     bufferedWriter.write(line1);
 		     bufferedWriter.newLine();
-		     bufferedWriter.write("We are writing");
-		     bufferedWriter.write(" the text to the file.");
+		     bufferedWriter.write(line3);
+		     bufferedWriter.newLine();
+		     bufferedWriter.write(line5);
+		     
+//		     nTimes.forEach(obj -> {
+//		         bufferedWriter.write(obj.toString());
+//		         yearList.add(c);
+//		       });
 		
 		     // Always close files.
 		     bufferedWriter.close();
@@ -124,6 +132,13 @@ public class CMIS242PRJ3RenickC {
 	    } // end static Integer getEfficiency
 
 	} // public static class Sequence
+	
+	public static void confirmAndExit() {
+		if (JOptionPane.showConfirmDialog(frame,  "You want to close the program?","Please confirm", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+			WriteFile(nTimes, results, efficiencies);
+			System.exit(0);
+		}
+	}
 
 	/**
 	 * Launch the application.
@@ -132,12 +147,19 @@ public class CMIS242PRJ3RenickC {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					//Build Basic JFrame
 					frame = new JFrame("CMIS242PRJ3RenickC");
 					frame.setBounds(100, 100, 450, 300);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.getContentPane().setLayout(null);
 					frame.setVisible(true);
+					frame.addWindowListener(new WindowAdapter(){
+						@Override
+						public void windowClosing(WindowEvent event) {
+							confirmAndExit();
+						}
+					});
 					
 					//Incorporate the Radio Buttons and bounds
 					final JRadioButton rdbtnIterative = new JRadioButton("Iterative");  //Setting the Jradio button iterative as final
@@ -190,6 +212,10 @@ public class CMIS242PRJ3RenickC {
 					instruction3.setEditable(false);
 					instruction3.setColumns(4);
 					
+					nTimes.add("Input Value");
+					results.add("Result Value");
+					efficiencies.add("Efficiency Value");
+					
 					JButton btnCompute = new JButton("Compute");
 					btnCompute.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
@@ -206,9 +232,9 @@ public class CMIS242PRJ3RenickC {
 									Integer efficiency = Sequence.getEfficiency(1,intInput);	
 									textField_2.setText(efficiency.toString());
 									
-									nTimes.add(intInput);
-									results.add(firstAnswer);
-									efficiencies.add(intInput);
+									nTimes.add(userInput);
+									results.add(sAnswer);
+									efficiencies.add(userInput);
 									
 								} else { //if the recursive button is selected do the following
 									
@@ -222,9 +248,9 @@ public class CMIS242PRJ3RenickC {
 									textField_2.setText(s3Answer); //setting the answer from the computerRecursive function to the output of the text field
 									textField_2.setEditable(false); //not allowing the user to edit this text field
 									
-									nTimes.add(intInput);
-									results.add(secondAnswer);
-									efficiencies.add(thirdAnswer);
+									nTimes.add(userInput);
+									results.add(s2Answer);
+									efficiencies.add(s3Answer);
 								}
 
 							} catch (Exception ex) { //If the user types in something that is not valid then do the following
