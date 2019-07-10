@@ -1,7 +1,7 @@
 /*
  * File: CMIS242PRJ3RenickC.java
  * Author: Chase Renick
- * Date: July 1, 2019
+ * Date: July 10, 2019
  * Purpose: This program is designed to do a calculation recursively and iteratively
  * based on what a user types into the program.
  */
@@ -40,13 +40,16 @@ public class CMIS242PRJ3RenickC {
     //Input: Array list of the input value from the user in the GUI, the results from the calculation, and efficiency number
     //Output: A csv file entitled results.csv that contains all the input data, result data, and efficiency data
 	public static void WriteFile (ArrayList<String> nTimes, ArrayList<String> results, ArrayList<String> efficiencies) {
-		String fileName = "results.csv";
+		String fileName = "efficiency.csv";
+		String fileName2 = "efficieny.txt";
 		try {
 			 // Assume default encoding.
 			 FileWriter fileWriter = new FileWriter(fileName);
+			 FileWriter fileWriter2 = new FileWriter(fileName2);
 	
 		     // Always wrap FileWriter in BufferedWriter.
 		     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+		     BufferedWriter bufferedWriter2 = new BufferedWriter(fileWriter2);
 		
 		     // Note that write() does not automatically
 		     // append a newline character.
@@ -54,19 +57,25 @@ public class CMIS242PRJ3RenickC {
 		     String line1 = nTimes.stream().collect(Collectors.joining(","));
 		     String line3 = results.stream().collect(Collectors.joining(","));
 		     String line5 = efficiencies.stream().collect(Collectors.joining(","));
+		     
+		     //Writing to File 1 (csv)
 		     bufferedWriter.write(line1);
 		     bufferedWriter.newLine();
 		     bufferedWriter.write(line3);
 		     bufferedWriter.newLine();
 		     bufferedWriter.write(line5);
 		     
-//		     nTimes.forEach(obj -> {
-//		         bufferedWriter.write(obj.toString());
-//		         yearList.add(c);
-//		       });
-		
-		     // Always close files.
+		     //Writing to File 2 (txt)
+		     bufferedWriter2.write(line1);
+		     bufferedWriter2.newLine();
+		     bufferedWriter2.write(line3);
+		     bufferedWriter2.newLine();
+		     bufferedWriter2.write(line5);
+		     
+
+		     //Closing Files
 		     bufferedWriter.close();
+		     bufferedWriter2.close();
 		     }
 		catch(IOException ex) {
 			System.out.println("Error writing to file '"+ fileName + "'");
