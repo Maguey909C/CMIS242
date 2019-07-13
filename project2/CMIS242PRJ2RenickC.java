@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors; 
 
 //Creating Class
-public class CMIS242PRJ3RenickC {  
+public class CMIS242PRJ2RenickC {  
     
 	public static Integer checkingAccount = 0;
 	public static Integer savingsAccount = 0;
