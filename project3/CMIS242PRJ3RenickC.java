@@ -1,44 +1,27 @@
 /*
  * File: CMIS242PRJ3RenickC.java
  * Author: Chase Renick
- * Date: July 10, 2019
+ * Date: July 13, 2019
  * Purpose: This program is designed to do a calculation recursively and iteratively
  * based on what a user types into the program.
  */
 
-//Installing Necessary Packages
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
-import java.awt.event.*;
 import java.awt.SystemColor;
-
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.stream.Collectors; 
+import java.lang.Math;
+import java.util.ArrayList;
 
-public class CMIS242PRJ3RenickC {
-
-	private static JFrame frame;
-	private static JTextField textField;
-	private static JTextField instruction1;
-	private static JTextField textField_1;
-	private static JTextField instruction2;
-	private static JTextField textField_2;
-	private static JTextField instruction3;
-	
+public class PRJ3 {  
+    
 	private static ArrayList<String> nTimes = new ArrayList<>();
 	private static ArrayList<String> results = new ArrayList<>();
 	private static ArrayList<String> efficiencies = new ArrayList<>();
 	
-	
-	//Function: Writes array lists to various lines in a csv file following the close of the GUI
-    //Input: Array list of the input value from the user in the GUI, the results from the calculation, and efficiency number
-    //Output: A csv file entitled results.csv that contains all the input data, result data, and efficiency data
 	public static void WriteFile (ArrayList<String> nTimes, ArrayList<String> results, ArrayList<String> efficiencies) {
 		String fileName = "efficiency.csv";
 		String fileName2 = "efficieny.txt";
@@ -83,12 +66,186 @@ public class CMIS242PRJ3RenickC {
 			}
 		}// end WriteFile
 	
-	
-	public static class GUI {
+    public static class Calculator extends JFrame {
+        
+        JTextField textField,textField_1,textField_2; //The values that are used to manipulate the data of the array
+        JLabel entry1, entry2, entry3; //References to aid the user in the program
+        private static JRadioButton rdbtnIterative, rdbtnRecursive; //JRadio buttons
+        
+        private static JFrame frame; //Creates the Frame for display messages
+   
+        public Calculator() {
+            
+            // Making layout GridBagLayout ()     
+            setLayout(new GridBagLayout());
+            frame = new JFrame();
+            
+            //Instance of the GUI
+            GridBagConstraints window = new GridBagConstraints();
+            
+            window.insets = new Insets (5, 5, 5, 5);
+            
+            //Incorporate the Radio Buttons and bounds
+			rdbtnIterative = new JRadioButton("Iterative");  //Setting the Jradio button iterative as final
+			window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 1;
+            window.gridy = 0;
+            window.gridwidth = 1;
+			rdbtnIterative.setSelected(true); //Having the JRadio button of "iterative" selected upon opening the application
+			add(rdbtnIterative, window);
+			
+			rdbtnRecursive = new JRadioButton("Recursive"); //Setting the JRadio button recursive
+			window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 1;
+            window.gridy = 1;
+            window.gridwidth = 1;
+			add(rdbtnRecursive, window);
+			
+			// Group the radio buttons to toggle between two groups
+			ButtonGroup group = new ButtonGroup();
+			group.add(rdbtnIterative);
+			group.add(rdbtnRecursive);
+            
+			// Entry N JLabel
+            entry1 = new JLabel ("Enter N: ");
+            entry1.setHorizontalAlignment(JLabel.LEFT);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 0;
+            window.gridy = 2;
+            window.gridwidth = 1;
+            add (entry1, window);
+            
+            // Entry Two JLabel
+            entry2 = new JLabel ("Results: ");
+            entry2.setHorizontalAlignment(JLabel.LEFT);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 0;
+            window.gridy = 3;
+            window.gridwidth = 1;
+            add (entry2, window);
+            
+            // Entry Three JLabel
+            entry3 = new JLabel ("Efficiency: ");
+            entry3.setHorizontalAlignment(JLabel.LEFT);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 0;
+            window.gridy = 4;
+            window.gridwidth = 1;
+            add (entry3, window);
+            
+            // Textfield 1
+            textField = new JTextField(8);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 1;
+            window.gridy = 2;
+            window.gridwidth = 1;
+            add (textField, window);
+            
+            // Textfield 2
+            textField_1 = new JTextField(4);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 1;
+            window.gridy = 3;
+            window.gridwidth = 1;
+            textField_1.setEditable(false);
+            add (textField_1, window);
+            
+            // Textfield 3
+            textField_2 = new JTextField(4);
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 1;
+            window.gridy = 4;
+            window.gridwidth = 1;
+            textField_2.setEditable(false);
+            add (textField_2, window);
+            
+            //JButton
+			JButton btnCompute = new JButton("Compute");
+            window.fill = GridBagConstraints.HORIZONTAL;
+            window.gridx = 0;
+            window.gridy = 5;
+            window.gridwidth = 0;
+            add (btnCompute, window);
+            
+            //Putting some initial labels to arrays to designate the responses for end user
+            nTimes.add("Input Value");
+			results.add("Result Value");
+			efficiencies.add("Efficiency Value");
+   
+            //Make instances of events in the program
+            Compute_Listener converter_listener = new Compute_Listener();
+            //Each event attached to listener.
+            btnCompute.addActionListener(converter_listener);
+            } // end  Calculator()    
+
+      /**
+       *This class handles all the action listeners. Handles 
+       */  
+		public class Compute_Listener implements ActionListener  {
+					
+					//Function checks whether or not a user's input is an integer or not
+					public boolean checkValue(String userInput) {
+						try {
+							Integer.parseInt(userInput); // Attempts to parse the Integer
+							return true;
+						  }
+						   catch(Exception e){
+						   return false;
+						 }
+					}
+					
+					// Actions performed 
+			        @Override
+			        public void actionPerformed(ActionEvent commands){
+			            
+			            String userInput = textField.getText();
+			            String operators = commands.getActionCommand(); // Finding particular command
+			            Boolean answer = rdbtnIterative.isSelected(); // Getting answer from whether 
+			            
+			            if(operators.equals("Compute")){ //
+			            	try {
+				            	if (checkValue(userInput)) {
+				            		int intInput = Integer.parseInt(userInput);
+				            		if (answer){ //if the iterative button is selected, do the following		
+			    						Integer firstAnswer = Sequence.computerIterative(intInput); //call the computerRecursive method which will calculate fibonacci sequence iteratively
+										String sAnswer = firstAnswer.toString();
+										textField_1.setText(sAnswer);
+										
+										Integer efficiency = Sequence.getEfficiency(1,intInput);	
+										textField_2.setText(efficiency.toString());
+										
+										nTimes.add(userInput);
+										results.add(sAnswer);
+										efficiencies.add(userInput);
+									} else { //if the recursive button is selected do the following
+										Integer secondAnswer = Sequence.computerRecursive(intInput); //call the computerRecursive method which will calculate fibonacci sequence recursively
+										String s2Answer = secondAnswer.toString();
+										textField_1.setText(s2Answer); //setting the answer from the computerRecursive function to the output of the text field
+										textField_1.setEditable(false); //not allowing the user to edit this text field
+				 
+				    					Integer thirdAnswer = Sequence.getEfficiency(2,intInput);//Calling on getEfficiency method to show how many iterations came from the operation
+										String s3Answer = thirdAnswer.toString();
+										textField_2.setText(s3Answer); //setting the answer from the computerRecursive function to the output of the text field
+										textField_2.setEditable(false); //not allowing the user to edit this text field
+										
+										nTimes.add(userInput);
+										results.add(s2Answer);
+										efficiencies.add(s3Answer);
+										};
+									} else {
+										JOptionPane.showMessageDialog(null, "Invalid input, please enter correct input data", "Error", JOptionPane.ERROR_MESSAGE);
+									}
+		    					} catch (Exception ex) { //If the user types in something that is not valid then do the following
+			                        JOptionPane.showMessageDialog(null, "Invalid input, please enter correct input data", "Error", JOptionPane.ERROR_MESSAGE);
+			                    }
+			            } // End Compute
 		
-	}
-	
-	//Sequence Class
+			        }//End of public void actionPerformed
+			        
+		        }//End of public class Compute_Listener
+		
+    }//End of Calculator Class
+    
 	public static class Sequence {
 
 		public static Integer recursiveCounter = 0;
@@ -142,141 +299,26 @@ public class CMIS242PRJ3RenickC {
 
 	} // public static class Sequence
 	
-	public static void confirmAndExit() {
-		if (JOptionPane.showConfirmDialog(frame,  "You want to close the program?","Please confirm", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
-			WriteFile(nTimes, results, efficiencies);
-			System.exit(0);
-		}
-	}
+	//Main Block
+    public static void main(String[] args) {
+    	Calculator converter = new Calculator(); //Create instance of converter 
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					
-					//Build Basic JFrame
-					frame = new JFrame("CMIS242PRJ3RenickC");
-					frame.setBounds(100, 100, 450, 300);
-					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.getContentPane().setLayout(null);
-					frame.setVisible(true);
-					frame.addWindowListener(new WindowAdapter(){
-						@Override
-						public void windowClosing(WindowEvent event) {
-							confirmAndExit();
-						}
-					});
-					
-					//Incorporate the Radio Buttons and bounds
-					final JRadioButton rdbtnIterative = new JRadioButton("Iterative");  //Setting the Jradio button iterative as final
-					rdbtnIterative.setSelected(true); //Having the JRadio button of "iterative" selected upon opening the application
-					rdbtnIterative.setBounds(238, 30, 141, 23);
-					frame.getContentPane().add(rdbtnIterative);
-					
-					JRadioButton rdbtnRecursive = new JRadioButton("Recursive"); //Setting the Jradio button recursive
-					rdbtnRecursive.setBounds(238, 73, 141, 23);
-					frame.getContentPane().add(rdbtnRecursive);
-					
-					//Group the radio buttons to toggle between two groups
-					ButtonGroup group = new ButtonGroup();
-					group.add(rdbtnIterative);
-					group.add(rdbtnRecursive);
-					
-					//Create the Text Fields within the content pane
-					textField = new JTextField();  //Creating the first user input text field
-					textField.setBounds(235, 119, 190, 26);
-					frame.getContentPane().add(textField);
-					textField.setColumns(10);
-					
-					instruction1 = new JTextField("Enter n:");
-					instruction1.setBounds(20, 129, 59, 16);
-					frame.getContentPane().add(instruction1);
-					instruction1.setEditable(false);
-					instruction1.setColumns(4);
-
-					textField_1 = new JTextField(); //creating the second text field
-					textField_1.setBounds(235, 198, 190, 26);
-					frame.getContentPane().add(textField_1);
-					textField_1.setColumns(10);
-					textField_1.setEditable(false);
-					
-					instruction2 = new JTextField("Results:");
-					instruction2.setBounds(20, 203, 59, 16);
-					frame.getContentPane().add(instruction2);
-					instruction2.setEditable(false);
-					instruction2.setColumns(4);
-
-					textField_2 = new JTextField(); //creating the third text field
-					textField_2.setBounds(235, 236, 190, 26);
-					frame.getContentPane().add(textField_2);
-					textField_2.setColumns(10);
-					textField_2.setEditable(false);
-					
-					instruction3 = new JTextField("Efficiency:");
-					instruction3.setBounds(20, 246, 77, 16);
-					frame.getContentPane().add(instruction3);
-					instruction3.setEditable(false);
-					instruction3.setColumns(4);
-					
-					nTimes.add("Input Value");
-					results.add("Result Value");
-					efficiencies.add("Efficiency Value");
-					
-					JButton btnCompute = new JButton("Compute");
-					btnCompute.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							try {
-								String userInput = textField.getText();
-								int intInput = Integer.parseInt(userInput);
-
-								if (rdbtnIterative.isSelected()){ //if the iterative button is selected, do the following
-									
-									Integer firstAnswer = Sequence.computerIterative(intInput); //call the computerRecursive method which will calculate fibonacci sequence iteratively
-									String sAnswer = firstAnswer.toString();
-									textField_1.setText(sAnswer);
-									
-									Integer efficiency = Sequence.getEfficiency(1,intInput);	
-									textField_2.setText(efficiency.toString());
-									
-									nTimes.add(userInput);
-									results.add(sAnswer);
-									efficiencies.add(userInput);
-									
-								} else { //if the recursive button is selected do the following
-									
-									Integer secondAnswer = Sequence.computerRecursive(intInput); //call the computerRecursive method which will calculate fibonacci sequence recursively
-									String s2Answer = secondAnswer.toString();
-									textField_1.setText(s2Answer); //setting the answer from the computerRecursive function to the output of the text field
-									textField_1.setEditable(false); //not allowing the user to edit this text field
-
-									Integer thirdAnswer = Sequence.getEfficiency(2,intInput);//Calling on getEfficiency method to show how many iterations came from the operation
-									String s3Answer = thirdAnswer.toString();
-									textField_2.setText(s3Answer); //setting the answer from the computerRecursive function to the output of the text field
-									textField_2.setEditable(false); //not allowing the user to edit this text field
-									
-									nTimes.add(userInput);
-									results.add(s2Answer);
-									efficiencies.add(s3Answer);
-								}
-
-							} catch (Exception ex) { //If the user types in something that is not valid then do the following
-			                    JOptionPane.showMessageDialog(null, "Invalid input, please enter correct input data", "Error", JOptionPane.ERROR_MESSAGE);
-			                }
-
-						}
-					});
-					
-					btnCompute.setBackground(SystemColor.textHighlight);
-					btnCompute.setBounds(235, 157, 190, 29);
-					frame.getContentPane().add(btnCompute);
-
-				} catch (Exception e) {
-					e.printStackTrace();
+         // Get basic parameters of a GUI 
+         converter.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         converter.addWindowListener(new WindowAdapter(){
+				@Override
+				public void windowClosing(WindowEvent event) {
+					//Pops up a listener, and when the users select the listener it will write to the file and close
+					if (JOptionPane.showConfirmDialog(converter,  "You want to close the program?","Please confirm", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) { 
+						WriteFile(nTimes, results, efficiencies);
+						System.exit(0);
+					}
 				}
-			}
-		});
-	}
-}
+			});
+         converter.pack();
+         converter.setTitle("Factorial Calculator");
+         converter.setLocationRelativeTo(null);
+         converter.setVisible(true);
+    }//End main()
+    
+}//End CMISPRJ3RenickC
