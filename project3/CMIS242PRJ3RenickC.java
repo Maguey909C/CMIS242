@@ -66,7 +66,7 @@ public class PRJ3 {
 			}
 		}// end WriteFile
 	
-    public static class Calculator extends JFrame {
+    public static class GUI extends JFrame {
         
         JTextField textField,textField_1,textField_2; //The values that are used to manipulate the data of the array
         JLabel entry1, entry2, entry3; //References to aid the user in the program
@@ -74,7 +74,7 @@ public class PRJ3 {
         
         private static JFrame frame; //Creates the Frame for display messages
    
-        public Calculator() {
+        public GUI() {
             
             // Making layout GridBagLayout ()     
             setLayout(new GridBagLayout());
@@ -301,7 +301,7 @@ public class PRJ3 {
 	
 	//Main Block
     public static void main(String[] args) {
-    	Calculator converter = new Calculator(); //Create instance of converter 
+    	GUI converter = new GUI(); //Create instance of converter 
 
          // Get basic parameters of a GUI 
          converter.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
