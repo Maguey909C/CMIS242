@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-public class InvestmentGUI2 {
+public class CMIS242PRJ4RenickC {
 	
 	public static Map<String, Student> map = new HashMap<String, Student>();
 	
