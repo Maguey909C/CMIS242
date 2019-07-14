@@ -1,5 +1,5 @@
-import java.util.List;
 
+import java.util.List;
 public class Student {
 	
 	private String name;
@@ -27,7 +27,7 @@ public class Student {
 		this.major = major;
 	} // end getMajor
 	
-	public Double calculateGPA(Double courseGrade, Double creditHours) {
+	public Double calculateGPA() {
 		int totalCredits =0;
 		double sum = 0;
 		for (Study course: list) {
@@ -41,8 +41,15 @@ public class Student {
 		}
 	} // end calculateGPA
 	
-	public void increaseStudy(Double courseGrade, int creditHours) {
+	public void supplementalClass(Integer courseGrade, Integer creditHours) {
 		list.add(new Study(courseGrade, creditHours));
 	}
 	
+	public String summary() {
+		StringBuilder data = new StringBuilder();
+		data.append("Name of student: " + name+"\n");
+		data.append("Student Major: " + major+"\n");
+		data.append("Student GPA: " +"1"+ "\n");
+		return data.toString();
+	}
 }// End Student Class
