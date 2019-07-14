@@ -2,7 +2,8 @@
  * File: CMIS242PRJ3RenickC.java
  * Author: Chase Renick
  * Date: July 13, 2019
- * Purpose: This program is designed to act like .
+ * Purpose: This program is designed to act like an ATM on multiple accounts. However it should be rewritten to become more modular, 
+ *although this code works
  */
 
 //Importing Necessary Packages
