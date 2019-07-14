@@ -2,8 +2,7 @@
  * File: CMIS242PRJ3RenickC.java
  * Author: Chase Renick
  * Date: July 2019
- * Purpose: This program is designed to do a calculation recursively and iteratively
- * based on what a user types into the program.
+ * Purpose: This program is designed to act as an ATM on one account. Program needs editing.
  */
 
 //Importing Necessary Packages
@@ -316,4 +315,4 @@ public class CMIS242PRJ2RenickC {
          converter.setVisible(true);
     }//End main()
     
-}//End CMISPRJ3RenickC
+}//End CMISPRJ2RenickC
