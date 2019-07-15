@@ -1,22 +1,18 @@
 /*
  * File: CMIS242PRJ4RenickC.java
  * Author: Chase Renick
- * Date: July 10, 2019
+ * Date: July 14, 2019
  * Purpose: This program is designed to act as a database allowing a user to insert, delete, find, and update records.
  */
 
 //Installing Necessary Packages
-
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import javax.swing.*;
-
 import java.io.*;
 import java.awt.event.*;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.Map;
@@ -32,7 +28,6 @@ public class CMIS242PRJ4RenickC {
 	        JButton calculate_button; 
 	        JTextField id, name, major; //The values that are used to manipulate the data of the array
 	        JLabel entry1, entry2, entry3, entry4; //References to aid the user in the program
-	        
 	        private JFrame frame;//Creates the Frame for display messages
 	        private JComboBox box;
 	        
@@ -118,7 +113,7 @@ public class CMIS242PRJ4RenickC {
 
 		        //Make instances of events in the program
 	            Compute_Listener converter_listener = new Compute_Listener();
-	            //Each event attached to listener.
+	            //Each event attached to listener
 	            calculate_button.addActionListener(converter_listener);
 	            } // end  GUI()    
 
@@ -132,7 +127,6 @@ public class CMIS242PRJ4RenickC {
 			        public void actionPerformed(ActionEvent commands){
 			            
 			            String userId = id.getText();
-			            Integer intId = Integer.parseInt(userId);
 			            String userName = name.getText();
 			            String userMajor = major.getText();
 			            String selected = box.getSelectedItem().toString();
@@ -143,6 +137,7 @@ public class CMIS242PRJ4RenickC {
 			            if(operators.equals("Process Request")) { 
 				            //Execution if user clicks Process Request Button
 				            try {
+				            	Integer intId = Integer.parseInt(userId);
 				            	if (selected == "Insert") { // Looks to see in combo box if insertion was highlighted
 				            		System.out.println("Inserting");
 				            		Student newStudent = new Student(userName, userMajor);
@@ -161,33 +156,32 @@ public class CMIS242PRJ4RenickC {
 				            		if (existingStudent != null) {
 				            			name.setText(existingStudent.getName()); //sets the name of the student in jtextbook and searches for existing student in hashmap
 				            			major.setText(String.valueOf(existingStudent.getMajor()));
-				            			JOptionPane.showMessageDialog(null, existingStudent.summary() +" found. See text box for details", "Message", JOptionPane.INFORMATION_MESSAGE);
+				            			JOptionPane.showMessageDialog(null, "Found!\n"+existingStudent.summary() +" found. See text box for details", "Message", JOptionPane.INFORMATION_MESSAGE);
 				            		} else {
 				            			JOptionPane.showMessageDialog(null, "Cannot not find the student with ID" +id.getText()+ " within the database.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				            		}
 				            	} else if (selected == "Update") { // Looks to see in combo box if update was highlighted
 				            		System.out.println("Updating");
-				            		
 				            		//Takes the user's selection for the update
 				            		String gradeString = (String) JOptionPane.showInputDialog(null,"Select Grade: ","",JOptionPane.QUESTION_MESSAGE,null,gradeOptions,gradeOptions[0]);
-				            		
 				            		//Calculates an integer version of the string
 				            		Integer gradeNumber = getGradeNumber(gradeString);
-				            		
 				            		String creds = (String) JOptionPane.showInputDialog(null,"Select Credit #: ","",JOptionPane.QUESTION_MESSAGE,null,numberOfCredits,numberOfCredits[0]);
 				            		Integer numofCreds = Integer.parseInt(creds);
 				            		if (map.containsKey(userId)) { //Looks to see if the userId is found in the hashmap
 				            			Student newStudent = map.get(userId); //gets out the object from the hashmap containing student data
-				            			newStudent.supplementalClass(gradeNumber, numofCreds); //adds grade and credits to the object
-				            			map.put(userId, newStudent); //puts in the upadted versio back into the hashmap
-				            			JOptionPane.showMessageDialog(null, newStudent.summary(), "Message", JOptionPane.INFORMATION_MESSAGE); //relays that information to user
+				            			newStudent.addClass(gradeNumber, numofCreds); //adds grade and credits to the object
+				            			map.put(userId, newStudent); //puts in the upadted version back into the hashmap
+				            			JOptionPane.showMessageDialog(null, "Updated Database for \n"+ newStudent.summary(), "Message", JOptionPane.INFORMATION_MESSAGE); //relays that information to user
+				            		} else {
+				            			JOptionPane.showMessageDialog(null, "Unable to update. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
 				            		}
 				            	} else {
 				            		System.out.println("Unrecognized");
 				            	}//End else
 				            } catch (Exception ex) { //If the user types in something that is not valid then do the following
 			                    JOptionPane.showMessageDialog(null, "Invalid input, please enter correct input data", "Error", JOptionPane.ERROR_MESSAGE);
-			                }
+			                } // end Exception
 			            }
 			        }// End actionPerformed
 
@@ -204,7 +198,7 @@ public class CMIS242PRJ4RenickC {
 				return 3;
 			} else if (gradeString.equals("C")) {
 				return 2;
-			} else if (gradeString.equals("C")) {
+			} else if (gradeString.equals("D")) {
 				return 1;	
 			} else {
 				return 0;
